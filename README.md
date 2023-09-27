@@ -1,5 +1,7 @@
 # VidStitcher
 
+Windows setup:
+
 Create a new folder, right click and choose open in terminal. Inside the console, type in:
 
 git clone https://github.com/Andro-Meta/VidStitcher.git
