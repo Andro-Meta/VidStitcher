@@ -1,5 +1,6 @@
 import cv2
 import os
+import re
 from moviepy.editor import *
 
 #VidStitcher Created by Andro.Meta
@@ -63,6 +64,12 @@ def video_to_frames(video_path, fps=None, start_time=None, end_time=None):
 
     vidcap.release()
     print(f"\nFrames extracted to {output_folder}")
+
+def atoi(text):
+    return int(text) if text.isdigit() else text
+
+def natural_keys(text):
+    return [atoi(c) for c in re.split(r'(\d+)', text)]    
     
 def frames_to_video(input_folder, output_video_filename, fps):
     images = [img for img in os.listdir(input_folder) if img.endswith(".png")]
@@ -72,12 +79,8 @@ def frames_to_video(input_folder, output_video_filename, fps):
         print("No .png images found in the specified directory.")
         return
 
-    # Sort images
-    try:
-        images.sort(key=lambda x: int(x[5:-4]))  # Assuming the format is "frame<number>.png"
-    except ValueError:
-        print("Error: Image filenames do not follow the expected 'frame<number>.png' format.")
-        return
+    # Sort images naturally
+    images.sort(key=natural_keys)
 
     frame = cv2.imread(os.path.join(input_folder, images[0]))
     h, w, layers = frame.shape
@@ -101,7 +104,6 @@ def frames_to_video(input_folder, output_video_filename, fps):
     
     out.release()
     print(f"\nVideo saved to {output_video_path}")
-
 
 def extract_audio_from_video(video_path, start_time=None, end_time=None, format='mp3'):
     # Load video
